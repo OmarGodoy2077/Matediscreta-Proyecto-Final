@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora Discreta</title>
+    <meta name="description" content="Resuelve permutaciones, combinaciones y rutas en grafos paso a paso.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232f7a4a'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Georgia'>∑</text></svg>">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="app">
+
+    <!-- ============ Menú lateral ============ -->
+    <aside class="barra">
+        <a class="marca" href="#/inicio">
+            <span class="marca-logo" aria-hidden="true">∑</span>
+            <span class="marca-texto">
+                <strong>Calculadora</strong>
+                <small>Matemática Discreta</small>
+            </span>
+        </a>
+
+        <nav class="menu" aria-label="Operaciones">
+            <a href="#/inicio" data-ruta="inicio">Inicio</a>
+
+            <p class="menu-grupo">Permutaciones</p>
+            <a href="#/permutacion-sin-repeticion" data-ruta="permutacion-sin-repeticion">Sin repetición</a>
+            <a href="#/permutacion-con-repeticion" data-ruta="permutacion-con-repeticion">Con repetición</a>
+
+            <p class="menu-grupo">Combinaciones</p>
+            <a href="#/combinacion-sin-repeticion" data-ruta="combinacion-sin-repeticion">Sin repetición</a>
+            <a href="#/combinacion-con-repeticion" data-ruta="combinacion-con-repeticion">Con repetición</a>
+
+            <p class="menu-grupo">Grafos</p>
+            <a href="#/ruta-mas-corta" data-ruta="ruta-mas-corta">Ruta más corta</a>
+            <a href="#/ruta-mas-larga" data-ruta="ruta-mas-larga">Ruta más larga</a>
+        </nav>
+
+        <button id="boton-tema" class="boton-tema" type="button">Cambiar tema</button>
+    </aside>
+
+    <main class="contenido">
+
+        <!-- ============ Vista: Inicio ============ -->
+        <section id="vista-inicio" class="vista">
+            <header class="encabezado">
+                <p class="eyebrow">Proyecto final · Matemática Discreta</p>
+                <h1>¿Qué quieres resolver hoy?</h1>
+                <p class="descripcion">Elige una operación, ingresa tus datos y obtén la respuesta con el desarrollo paso a paso.</p>
+            </header>
+
+            <div class="rejilla-inicio">
+                <article class="tarjeta tarjeta-inicio">
+                    <span class="icono-categoria mate" aria-hidden="true">Pₖⁿ</span>
+                    <h2>Permutaciones</h2>
+                    <p>Cuando <strong>el orden sí importa</strong>: podios, contraseñas, filas, anagramas.</p>
+                    <div class="enlaces-inicio">
+                        <a class="boton boton-secundario" href="#/permutacion-sin-repeticion">Sin repetición</a>
+                        <a class="boton boton-secundario" href="#/permutacion-con-repeticion">Con repetición</a>
+                    </div>
+                </article>
+                <article class="tarjeta tarjeta-inicio">
+                    <span class="icono-categoria mate" aria-hidden="true">Cₖⁿ</span>
+                    <h2>Combinaciones</h2>
+                    <p>Cuando <strong>el orden no importa</strong>: equipos, comités, ingredientes, partidos.</p>
+                    <div class="enlaces-inicio">
+                        <a class="boton boton-secundario" href="#/combinacion-sin-repeticion">Sin repetición</a>
+                        <a class="boton boton-secundario" href="#/combinacion-con-repeticion">Con repetición</a>
+                    </div>
+                </article>
+                <article class="tarjeta tarjeta-inicio">
+                    <span class="icono-categoria" aria-hidden="true">
+                        <svg viewBox="0 0 40 28" width="40" height="28"><path d="M6 20 L20 6 L34 20 L6 20" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="20" r="4"/><circle cx="20" cy="6" r="4"/><circle cx="34" cy="20" r="4"/></svg>
+                    </span>
+                    <h2>Grafos</h2>
+                    <p>Encuentra la ruta <strong>más corta</strong> o <strong>más larga</strong> entre dos nodos de un grafo con pesos.</p>
+                    <div class="enlaces-inicio">
+                        <a class="boton boton-secundario" href="#/ruta-mas-corta">Ruta más corta</a>
+                        <a class="boton boton-secundario" href="#/ruta-mas-larga">Ruta más larga</a>
+                    </div>
+                </article>
+            </div>
+
+            <aside class="consejo">
+                <strong>¿Permutación o combinación?</strong>
+                Pregúntate: si cambio el orden, ¿es un resultado distinto? Si la respuesta es <em>sí</em>, es una permutación; si es <em>no</em>, es una combinación.
+            </aside>
+        </section>
+
+        <!-- ============ Vista: Permutaciones y combinaciones ============ -->
+        <section id="vista-conteo" class="vista" hidden>
+            <header class="encabezado">
+                <p class="eyebrow" id="conteo-grupo"></p>
+                <h1 id="conteo-titulo"></h1>
+                <p class="descripcion" id="conteo-descripcion"></p>
+            </header>
+
+            <!-- Solo para "permutación con repetición": elegir entre sus dos variantes -->
+            <div id="conteo-variantes" class="segmentado" role="tablist" hidden>
+                <button type="button" role="tab" data-variante="posiciones">Posiciones con repetición · nᵏ</button>
+                <button type="button" role="tab" data-variante="elementos">Elementos repetidos · anagramas</button>
+            </div>
+
+            <form id="formulario-conteo" class="tarjeta formulario" novalidate>
+                <div class="formula-caja">
+                    <span class="formula-etiqueta">Fórmula</span>
+                    <span class="mate formula" id="conteo-formula"></span>
+                </div>
+
+                <!-- Datos n y k -->
+                <div id="campos-nk" class="campos">
+                    <label class="campo">
+                        <span id="etiqueta-n">n</span>
+                        <input id="valor-n" type="number" inputmode="numeric" min="0" step="1" placeholder="Ej. 10">
+                    </label>
+                    <label class="campo">
+                        <span id="etiqueta-k">k</span>
+                        <input id="valor-k" type="number" inputmode="numeric" min="0" step="1" placeholder="Ej. 2">
+                    </label>
+                </div>
+
+                <!-- Datos para elementos repetidos -->
+                <div id="campos-elementos" class="campos-elementos" hidden>
+                    <div class="opciones-radio" role="radiogroup" aria-label="Tipo de dato">
+                        <label><input type="radio" name="tipo-elementos" value="palabra" checked> Una palabra</label>
+                        <label><input type="radio" name="tipo-elementos" value="cantidades"> Cantidades</label>
+                    </div>
+                    <label class="campo">
+                        <span id="etiqueta-elementos">Palabra</span>
+                        <input id="valor-elementos" type="text" autocomplete="off" placeholder="Ej. CASA">
+                        <small id="ayuda-elementos" class="ayuda">Se cuentan las letras que se repiten. Los espacios se ignoran.</small>
+                    </label>
+                </div>
+
+                <p class="ejemplo" id="conteo-ejemplo"></p>
+
+                <div class="acciones">
+                    <button class="boton boton-primario" type="submit">Calcular</button>
+                    <button class="boton boton-secundario" type="button" id="boton-ejemplo-conteo">Cargar ejemplo</button>
+                    <button class="boton boton-texto" type="reset">Limpiar</button>
+                </div>
+            </form>
+
+            <div id="resultado-conteo" aria-live="polite"></div>
+        </section>
+
+        <!-- ============ Vista: Grafos ============ -->
+        <section id="vista-grafo" class="vista" hidden>
+            <header class="encabezado">
+                <p class="eyebrow">Grafos</p>
+                <h1 id="grafo-titulo"></h1>
+                <p class="descripcion" id="grafo-descripcion"></p>
+            </header>
+
+            <div class="grafo-rejilla">
+                <form id="formulario-grafo" class="tarjeta formulario" novalidate>
+                    <h2 class="subtitulo">Tipo de grafo</h2>
+                    <div id="tipo-grafo" class="segmentado" role="radiogroup" aria-label="Tipo de grafo">
+                        <button type="button" role="radio" data-tipo="no-dirigido">No dirigido</button>
+                        <button type="button" role="radio" data-tipo="dirigido">Dirigido</button>
+                        <button type="button" role="radio" data-tipo="mixto">Mixto</button>
+                    </div>
+
+                    <h2 class="subtitulo">Aristas</h2>
+                    <p class="ayuda">
+                        <span id="ayuda-tipo-grafo"></span>
+                        Los nodos se crean solos al escribir su nombre (A, B, 1, 2, Casa…).
+                    </p>
+
+                    <div class="aristas-encabezado" aria-hidden="true">
+                        <span>Origen</span><span>Sentido</span><span>Destino</span><span>Peso</span><span></span>
+                    </div>
+                    <div id="lista-aristas" class="lista-aristas"></div>
+
+                    <div class="acciones acciones-compactas">
+                        <button class="boton boton-secundario" type="button" id="boton-agregar-arista">+ Agregar arista</button>
+                        <button class="boton boton-secundario" type="button" id="boton-ejemplo-grafo">Ejemplo de clase</button>
+                        <button class="boton boton-texto" type="button" id="boton-limpiar-grafo">Limpiar</button>
+                    </div>
+
+                    <div class="campos campos-ruta">
+                        <label class="campo">
+                            <span>Nodo de origen</span>
+                            <select id="grafo-origen"></select>
+                        </label>
+                        <label class="campo">
+                            <span>Nodo de destino</span>
+                            <select id="grafo-destino"></select>
+                        </label>
+                    </div>
+
+                    <div class="acciones">
+                        <button class="boton boton-primario" type="submit" id="boton-calcular-grafo">Calcular</button>
+                    </div>
+                </form>
+
+                <div class="tarjeta lienzo">
+                    <div class="lienzo-cabecera">
+                        <h2 class="subtitulo">Vista del grafo</h2>
+                        <span class="leyenda">
+                            <span class="leyenda-item"><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" class="leyenda-linea"/></svg>Ambos sentidos</span>
+                            <span class="leyenda-item"><svg width="26" height="10"><line x1="1" y1="5" x2="19" y2="5" class="leyenda-linea"/><path d="M18 1 L25 5 L18 9 Z" class="leyenda-flecha"/></svg>Un sentido</span>
+                            <span class="leyenda-item"><span class="leyenda-ruta"></span>Ruta</span>
+                        </span>
+                    </div>
+                    <svg id="dibujo-grafo" viewBox="0 0 560 420" role="img" aria-label="Dibujo del grafo"></svg>
+                </div>
+            </div>
+
+            <div id="resultado-grafo" aria-live="polite"></div>
+        </section>
+    </main>
+</div>
+
+<script src="grafo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

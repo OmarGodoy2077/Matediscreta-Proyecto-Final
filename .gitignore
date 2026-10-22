@@ -1,0 +1,24 @@
+# Material de clase (solo referencia local, no se sube al repositorio)
+# La carpeta se llama "Docs clases " (con espacio al final); el "\ " lo conserva
+Docs\ clases\ /
+Docs clases/
+
+# Archivos compilados (se generan con "make")
+build/
+*.o
+*.exe
+
+# Dependencias (pnpm)
+node_modules/
+.pnpm-store/
+
+# Sistema y editor
+.DS_Store
+.vscode/
+.idea/
+
+# Guiones personales para la exposición (solo local)
+docs/guion-exposicion.md
+docs/demo-sistema.md
+docs/manual-usuario.md
+docs/estado-proyecto.md
